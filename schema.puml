@@ -1,0 +1,40 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Windows" {
+  [Python-агент] as agent
+  [Filebeat] as filebeat
+}
+
+package "ELK Stack" {
+  [Elasticsearch] as es
+  [Kibana] as kibana
+}
+
+agent --> filebeat : Запись в traffic_logs.json
+filebeat --> es : Отправка логов
+es --> kibana : Данные для визуализации
+
+note right of agent
+  Мониторит сетевые соединения,
+  определяет домены, логирует
+  события в JSON-файл.
+end note
+
+note right of filebeat
+  Считывает JSON-логи и
+  отправляет их в Elasticsearch.
+end note
+
+note right of es
+  Хранение и индексирование данных.
+end note
+
+note right of kibana
+  Визуализация логов,
+  создание дашбордов и алертов.
+end note
+
+title Архитектура SIEM-агента с ELK
+caption Python-агент → Filebeat → Elasticsearch → Kibana
+@enduml
